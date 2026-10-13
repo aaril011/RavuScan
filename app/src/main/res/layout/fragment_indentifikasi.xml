@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0D0D0D"
+    tools:context=".ui.identifikasi.IndentifikasiFragment">
+
+    <!-- ============ TAHAP 1: AMBIL (kamera / galeri) ============ -->
+    <FrameLayout
+        android:id="@+id/layoutAmbil"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#0D0D0D">
+
+        <!-- Viewfinder live CameraX -->
+        <androidx.camera.view.PreviewView
+            android:id="@+id/previewView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:scaleType="fillCenter" />
+
+        <!-- Indikator fokus/exposure saat layar disentuh -->
+        <View
+            android:id="@+id/focusRing"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:background="@drawable/focus_ring"
+            android:visibility="gone" />
+
+        <!-- Label level exposure / zoom saat digeser -->
+        <TextView
+            android:id="@+id/exposureLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_marginTop="168dp"
+            android:background="@drawable/bg_pill_mint"
+            android:fontFamily="@font/poppins_semibold"
+            android:includeFontPadding="false"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:text="+0.0 EV"
+            android:textColor="@color/ravu_navy"
+            android:textSize="13sp"
+            android:visibility="gone" />
+
+        <!-- Pill feedback mode flash -->
+        <LinearLayout
+            android:id="@+id/flashLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_marginTop="168dp"
+            android:background="@drawable/bg_pill_mint"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="12dp"
+            android:paddingEnd="14dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/flashLabelIcon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_flash_off"
+                android:contentDescription="@null" />
+
+            <TextView
+                android:id="@+id/flashLabelText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:fontFamily="@font/poppins_semibold"
+                android:includeFontPadding="false"
+                android:text="Flash mati"
+                android:textColor="@color/ravu_navy"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <!-- Hint tetap terlihat di atas preview -->
+
+        <!-- Bar atas: flash kiri + hint tengah + close kanan (hijau), putih ikut tema -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingTop="48dp"
+            android:paddingBottom="12dp">
+
+            <ImageView
+                android:id="@+id/btnFlash"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="10dp"
+                android:src="@drawable/ic_flash_off"
+                android:contentDescription="Flash" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/poppins_regular"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:padding="10dp"
+                android:text="Ketuk layar untuk fokus, geser untuk atur cahaya, cubit untuk zoom. Letakkan daun di tengah dengan cahaya terang dan gambar tidak buram."
+                android:textColor="@color/ravu_navy"
+                android:textSize="11sp" />
+
+            <ImageView
+                android:id="@+id/btnCloseAmbil"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="10dp"
+                android:src="@drawable/icon_close"
+                android:contentDescription="Tutup" />
+        </LinearLayout>
+
+        <!-- Bar bawah: putih ikut tema, ada space bawah -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="28dp"
+            android:paddingEnd="28dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="36dp">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                app:cardBackgroundColor="@color/ravu_bg"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/ravu_green"
+                app:strokeWidth="1dp">
+
+                <ImageView
+                    android:id="@+id/btnGalleryThumb"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="14dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/galeri"
+                    android:contentDescription="Galeri" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/btnShutter"
+                android:layout_width="76dp"
+                android:layout_height="76dp"
+                android:src="@drawable/icon_takepicture"
+                android:contentDescription="Ambil foto" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/btnGalleryRotate"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:src="@drawable/icon_rotate"
+                android:contentDescription="Ganti kamera" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <!-- ============ TAHAP 2: VALIDASI / REVIEW ============ -->
+    <FrameLayout
+        android:id="@+id/layoutValidasi"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#0D0D0D"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imgValidasi"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:contentDescription="Pratinjau daun" />
+
+        <!-- Bar atas putih seperti kamera -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingTop="48dp"
+            android:paddingBottom="12dp">
+
+            <Space
+                android:layout_width="52dp"
+                android:layout_height="52dp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/poppins_semibold"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:text="Periksa hasil foto"
+                android:textColor="@color/ravu_navy"
+                android:textSize="16sp" />
+
+            <Space
+                android:layout_width="52dp"
+                android:layout_height="52dp" />
+        </LinearLayout>
+
+        <!-- Bar bawah putih seperti kamera -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="36dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnUlangi"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/poppins_medium"
+                android:text="Ulangi"
+                android:textAllCaps="false"
+                android:textColor="@color/ravu_green"
+                android:textSize="15sp"
+                app:cornerRadius="12dp"
+                app:icon="@drawable/ic_chevron_left_green"
+                app:iconGravity="textStart"
+                app:iconPadding="6dp"
+                app:iconSize="22dp"
+                app:iconTint="@color/ravu_green"
+                app:strokeColor="@color/ravu_green"
+                app:strokeWidth="1dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnPindai"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/poppins_medium"
+                android:text="Pindai"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                app:backgroundTint="@color/ravu_green"
+                app:cornerRadius="12dp"
+                app:elevation="0dp"
+                app:icon="@drawable/ic_chevron_right_white"
+                app:iconGravity="textEnd"
+                app:iconPadding="6dp"
+                app:iconSize="22dp"
+                app:iconTint="#FFFFFF" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <!-- ============ TAHAP 3: HASIL ============ -->
+    <FrameLayout
+        android:id="@+id/layoutHasil"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#0D0D0D"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imgHasil"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:contentDescription="Hasil identifikasi" />
+
+        <!-- Header hijau -->
+        <LinearLayout
+            android:id="@+id/headerHasil"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:background="@color/ravu_green"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingTop="48dp"
+            android:paddingBottom="12dp">
+
+            <ImageView
+                android:id="@+id/btnBackHasil"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="12dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/icon_arrow"
+                android:contentDescription="Kembali" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/poppins_semibold"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:text="Hasil Identifikasi"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp" />
+
+            <Space
+                android:layout_width="44dp"
+                android:layout_height="44dp" />
+        </LinearLayout>
+
+        <!-- Bottom sheet hasil -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/sheetHasil"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            app:cardBackgroundColor="@color/white"
+            app:cardElevation="0dp"
+            app:strokeColor="@color/white"
+            app:strokeWidth="0dp"
+            app:shapeAppearance="@style/ShapeAppearance.RavuScan.SheetTop">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="24dp"
+                android:paddingBottom="48dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvHasilBadge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_pill_mint"
+                        android:fontFamily="@font/poppins_semibold"
+                        android:includeFontPadding="false"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp"
+                        android:text="HASIL TERBAIK"
+                        android:textColor="@color/ravu_green"
+                        android:textSize="11sp" />
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" />
+
+                    <LinearLayout
+                        android:id="@+id/pillAkurasi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_pill_mint"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="12dp"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp">
+
+                        <ImageView
+                            android:id="@+id/imgAkurasi"
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:src="@drawable/ic_check_small"
+                            android:contentDescription="@null" />
+
+                        <TextView
+                            android:id="@+id/tvAkurasi"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:fontFamily="@font/poppins_semibold"
+                            android:includeFontPadding="false"
+                            android:text="98.5% cocok"
+                            android:textColor="@color/ravu_green"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvNamaTanaman"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:fontFamily="@font/poppins_bold"
+                    android:includeFontPadding="false"
+                    android:text="Daun Nilam"
+                    android:textColor="@color/ravu_navy"
+                    android:textSize="28sp" />
+
+                <ProgressBar
+                    android:id="@+id/progressAkurasi"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp"
+                    android:layout_marginTop="14dp"
+                    android:max="100"
+                    android:progress="98"
+                    android:progressBackgroundTint="#E3EFE8"
+                    android:progressTint="@color/ravu_green" />
+
+                <TextView
+                    android:id="@+id/tvHasilHint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/poppins_regular"
+                    android:includeFontPadding="false"
+                    android:lineSpacingExtra="2dp"
+                    android:text="Keyakinan model di bawah 70%. Coba foto ulang dengan daun di tengah, cahaya terang, dan tidak buram."
+                    android:textColor="@color/ravu_grey"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnPindaiLagi"
+                    android:layout_width="match_parent"
+                    android:layout_height="54dp"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/poppins_medium"
+                    android:text="Pindai Lagi"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp"
+                    app:backgroundTint="@color/ravu_green"
+                    app:cornerRadius="16dp"
+                    app:elevation="2dp"
+                    app:icon="@drawable/icon_camera"
+                    app:iconGravity="textStart"
+                    app:iconPadding="8dp"
+                    app:iconSize="20dp"
+                    app:iconTint="#FFFFFF" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </FrameLayout>
+
+    <!-- Loading saat model memindai -->
+    <FrameLayout
+        android:id="@+id/layoutLoading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/white" />
+    </FrameLayout>
+</FrameLayout>
